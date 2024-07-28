@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 interface patientProps{
@@ -38,22 +39,16 @@ const formSchema = z.object({
 
 //get patient via information
 
-const current : Patient = {
-    id: '66a38e19e31b38b257a32f49',
-    patient_id: 1301,
-    patient_name: "Raja Prescott",
-    age: 35,
-    height: 162,
-    weight: 65,
-    history: "Yes",
-    scan_id: "233",
-};
 
-export function ProfileForm({ patient } : patientProps) {
+export function PatientDetails() {
+    const navigate = useNavigate();
+
+    const location = useLocation();
+    const patientFromLocation: Patient = location.state?.patient;
     // 1. Define your form.
     const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
-      defaultValues: current,
+      defaultValues: patientFromLocation,
     });
    
     // 2. Define a submit handler.
@@ -67,7 +62,7 @@ export function ProfileForm({ patient } : patientProps) {
     return (
       <>
       <Button onClick={() => {
-        // go to the patient search page
+        navigate("/patients")
       }}>Back</Button>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -78,7 +73,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>Patient Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Patient Name" {...field} />
+                  <Input placeholder={patientFromLocation.patient_name} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's full name.
@@ -96,7 +91,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>Patient ID</FormLabel>
                 <FormControl>
-                  <Input disabled placeholder="Patient ID" {...field} />
+                  <Input disabled placeholder={(""+patientFromLocation.patient_id)} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's ID.
@@ -114,7 +109,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>Patient Age</FormLabel>
                 <FormControl>
-                  <Input placeholder="Patient Age" {...field} />
+                  <Input placeholder={(""+patientFromLocation.age)} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's age.
@@ -132,7 +127,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>{"Patient Height (cm)"}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Patient Height" {...field} />
+                  <Input placeholder={(""+patientFromLocation.height)} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's height.
@@ -148,9 +143,9 @@ export function ProfileForm({ patient } : patientProps) {
             name="weight"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Patient Name (kg)</FormLabel>
+                <FormLabel>Patient Weight (kg)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Patient Weight" {...field} />
+                  <Input placeholder={(""+patientFromLocation.weight)} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's weight.
@@ -168,7 +163,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>Has the patient had breast cancer previously?</FormLabel>
                 <FormControl>
-                  <Input placeholder="Patient History" {...field} />
+                  <Input placeholder={(patientFromLocation.history)} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is if the patient has had breast cancer before.
@@ -186,7 +181,7 @@ export function ProfileForm({ patient } : patientProps) {
               <FormItem>
                 <FormLabel>Scan ID</FormLabel>
                 <FormControl>
-                  <Input disabled placeholder="Scan ID" {...field} />
+                  <Input disabled placeholder={(patientFromLocation.scan_id?patientFromLocation.scan_id : "N/A")} {...field} />
                 </FormControl>
                 <FormDescription>
                   This is the patient's Scan ID.
@@ -196,7 +191,8 @@ export function ProfileForm({ patient } : patientProps) {
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          {/* // submit */}
+          <Button type="submit" >Save</Button>
         </form>
       </Form>
       </>

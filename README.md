@@ -17,6 +17,8 @@ A patient management tool to visualise scans & manage patient data. An entry for
 
 - Ensure you have [Python](https://www.python.org/downloads/) installed (preferably version 3.7 or higher).
 - Ensure you have [Pipenv](https://pipenv.pypa.io/en/latest/install/) installed.
+- Ensure you have [Node.js](https://nodejs.org/) installed (preferably version 14 or higher).
+- Ensure you have [npm](https://www.npmjs.com/) installed.
 
 ### Clone the Repository
 
@@ -30,7 +32,19 @@ A patient management tool to visualise scans & manage patient data. An entry for
 3. Navigate to the project directory:
 
     ```sh
-    cd your-repo-name
+    cd front-end
+    ``` 
+    When dealing with the front-end
+
+    ```sh
+    cd back-end
+    ``` 
+    When dealing with the back-end
+
+    & to run files, cd into the folder first:
+    ```
+    cd folder_name
+    python folder_name
     ```
 
 ### Set Up the Virtual Environment and Install Dependencies
@@ -53,8 +67,10 @@ A patient management tool to visualise scans & manage patient data. An entry for
 2. Add the necessary environment variables to the `.env` file. Example:
 
     ```env
-    DATABASE_URL=your_database_url
-    SECRET_KEY=your_secret_key
+    PORT_NUMBER=3000
+    DATABASE_URL=
+    CONNECTION_STRING=
+
     ```
 
 ## Usage
@@ -70,8 +86,9 @@ A patient management tool to visualise scans & manage patient data. An entry for
 2. Run the application:
 
     ```sh
-    python app/main.py
+    python path/to/folder/name.py
     ```
+    or cd to the folder of the file.
 
 ### Additional Commands
 
@@ -80,6 +97,8 @@ A patient management tool to visualise scans & manage patient data. An entry for
     ```sh
     python app/core/db_initialiser.py
     ```
+
+    this isn't needed though.
 
 ## Contributing
 

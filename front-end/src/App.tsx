@@ -3,17 +3,28 @@ import './App.css'
 import { Button } from './components/ui/button';
 import Dashboard from './components/PatientDashboard';
 import {
+  BrowserRouter as Router,
+  Navigate,
   Route,
   RouterProvider,
+  Routes,
+  useNavigate,
 } from 'react-router-dom';
 import ScanDashboard from './components/ScanDashboard';
+import Login from './components/Login';
+import PatientCard from './components/PatientCard';
+import { PatientDetails } from './components/PatientDetails';
 
 
 function App() {
   return (
-    <div>
-      <ScanDashboard/>
-    </div>
+    <Router>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/patients/*" element={<Dashboard />} />
+      <Route path="*" element={<p>Not Found</p>} /> {/* Default to Dashboard */}
+    </Routes>
+  </Router>
   );
 };
 

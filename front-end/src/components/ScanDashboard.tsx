@@ -38,7 +38,10 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import PatientCard, { Patient } from "./PatientCard";
 import { SheetDemo } from "./Settings";
-import { ProfileForm } from "./PatientDetails";
+import ScanView from "./ScanView";
+
+
+
 
 const ScanDashboard = () => {
   const patient: Patient = {
@@ -192,6 +195,8 @@ const ScanDashboard = () => {
           </div>
           <PatientCard /> */}
           {/* <ProfileForm patient={patient} /> */}
+          {/* <ScanView/> */}
+
 
           
         </main>

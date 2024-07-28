@@ -16,7 +16,7 @@ import {
   ShoppingCart,
   Users,
 } from "lucide-react";
-
+import axios from "axios";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,23 +38,58 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import PatientCard, { Patient } from "./PatientCard";
 import { SheetDemo } from "./Settings";
-import { ProfileForm } from "./PatientDetails";
+import { PatientDetails } from "./PatientDetails";
+import { useEffect, useRef, useState } from "react";
+import { Link, Navigate, NavigateFunction, Route, Routes, useNavigate } from "react-router-dom";
+import Login from "./Login";
+
+
+
 
 const Dashboard = () => {
-  const patient: Patient = {
-    id: '66a38e19e31b38b257a32f49',
-    patient_id: 1301,
-    patient_name: "Raja Prescott",
-    age: 35,
-    height: 162,
-    weight: 65,
-    history: "yes",
-    scan_id: "233",
-  }
-  const page = 2;
-  // state management will go here
+  
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null >(null);
+  const [inputValue, setInputValue] = useState<string>('');
+
+  const hasLetters = (str: string) => {
+    const regex = /[a-zA-Z]/;
+    return regex.test(str);
+  };
+  
+  
   
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let reqString = `http://127.0.0.1:8000/patients/${inputValue}`;
+        if(hasLetters(inputValue)) reqString = `http://127.0.0.1:8000/patients/patient_name/${inputValue}`;
+        const response = await axios.get<Patient[]>(reqString);
+        setPatients(response.data);
+        console.log(patients);
+        setLoading(false);
+      } catch (err) {
+        setError((err as Error).message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [inputValue]); // Dependency array is empty to run only once
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+
+
+
+  
+  // state management will go here
+  const navigate = useNavigate();
+  
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -67,13 +102,13 @@ const Dashboard = () => {
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <a
-                href="#"
+              <Link
+                to="/patients"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <Home className="h-4 w-4" />
                 Manage Patients
-              </a>
+              </Link>
               <a
                 href="#"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -99,7 +134,9 @@ const Dashboard = () => {
                     </SheetDemo>
               </CardHeader>
               <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-                <Button size="sm" className="w-full">
+                <Button onClick={() => {
+                  navigate("/login");
+                }} size="sm" className="w-full">
                   Log Out
                 </Button>
               </CardContent>
@@ -175,6 +212,7 @@ const Dashboard = () => {
               <div className="relative">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
+                  onChange={handleInputChange}
                   type="search"
                   placeholder="Search Patients by ID or Name"
                   className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-2/5"
@@ -191,7 +229,14 @@ const Dashboard = () => {
             </h1>
           </div>
           <PatientCard /> */}
+          
           {/* <ProfileForm patient={patient} /> */}
+            
+          <Routes>
+              <Route path ="/" element={<PatientCard data={patients}  />} />
+              <Route path="/:patientId" element={<PatientDetails  />} />
+              <Route path="*" element={<Navigate to="/patients" />} />
+          </Routes>
 
           
         </main>
