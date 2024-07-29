@@ -1,9 +1,8 @@
-import React from 'react'
-import { Patient } from './PatientCard'
-import z from "zod"
+import React from 'react';
+import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,58 +11,52 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Patient } from './PatientCard';
 
-
-interface patientProps{
-    patient: Patient
-}
+const formSchema = z.object({
+  id: z.string(),
+  patient_id: z.number(),
+  patient_name: z.string().min(1, "Patient name must not be empty").max(50),
+  age: z.number().min(1, "Patient must have an age").max(150).positive().int("Age cannot be decimal"),
+  height: z.number().positive().max(250),
+  weight: z.number().positive(),
+  history: z.string(),
+  scan_id: z.string()
+});
 
 type FormValues = z.infer<typeof formSchema>;
 
-const formSchema = z.object({
-    id: z.string(),
-    patient_id: z.number(),
-    patient_name: z.string().min(1, 
-        "Patient name must not be empty"
-    ).max(50),
-    age:z.number().min(1, "Patient must have an age")
-    .max(150).positive().int("Age cannot be decimal"),
-    height: z.number().positive().max(250),
-    weight: z.number().positive(),
-    history: z.string(),
-    scan_id: z.string()
-});
-
-//get patient via information
-
-
 export function PatientDetails() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const patientFromLocation: Patient = location.state?.patient;
 
-    const location = useLocation();
-    const patientFromLocation: Patient = location.state?.patient;
-    // 1. Define your form.
-    const form = useForm<FormValues>({
-      resolver: zodResolver(formSchema),
-      defaultValues: patientFromLocation,
-    });
-   
-    // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
-      // send axios request to post to update 
-      console.log("");
-    };
+  if (!patientFromLocation) {
+    return <div>Error: Patient data not found.</div>;
+  }
 
-    return (
-      <>
-      <Button onClick={() => {
-        navigate("/patients")
-      }}>Back</Button>
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      ...patientFromLocation,
+      patient_id: Number(patientFromLocation.patient_id),
+      age: Number(patientFromLocation.age),
+      height: Number(patientFromLocation.height),
+      weight: Number(patientFromLocation.weight),
+    },
+  });
+
+  const onSubmit = (values: FormValues) => {
+    console.log("Form values:", values);
+    // Handle form submission, e.g., send a request to update patient data
+  };
+
+  return (
+    <>
+      <Button onClick={() => navigate("/patients")}>Back</Button>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -73,15 +66,11 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Patient Name</FormLabel>
                 <FormControl>
-                  <Input placeholder={patientFromLocation.patient_name} {...field} />
+                  <Input {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's full name.
-                </FormDescription>
+                <FormDescription>This is the patient's full name.</FormDescription>
                 <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
               </FormItem>
-              
             )}
           />
           <FormField
@@ -91,15 +80,11 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Patient ID</FormLabel>
                 <FormControl>
-                  <Input disabled placeholder={(""+patientFromLocation.patient_id)} {...field} />
+                  <Input {...field} type="number" disabled />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's ID.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is the patient's ID.</FormDescription>
+                <FormMessage>{form.formState.errors.patient_id?.message}</FormMessage>
               </FormItem>
-              
             )}
           />
           <FormField
@@ -109,15 +94,11 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Patient Age</FormLabel>
                 <FormControl>
-                  <Input placeholder={(""+patientFromLocation.age)} {...field} />
+                  <Input {...field} type="number" />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's age.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is the patient's age.</FormDescription>
+                <FormMessage>{form.formState.errors.age?.message}</FormMessage>
               </FormItem>
-              
             )}
           />
           <FormField
@@ -125,17 +106,13 @@ export function PatientDetails() {
             name="height"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{"Patient Height (cm)"}</FormLabel>
+                <FormLabel>Patient Height (cm)</FormLabel>
                 <FormControl>
-                  <Input placeholder={(""+patientFromLocation.height)} {...field} />
+                  <Input {...field} type="number" />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's height.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is the patient's height.</FormDescription>
+                <FormMessage>{form.formState.errors.height?.message}</FormMessage>
               </FormItem>
-              
             )}
           />
           <FormField
@@ -145,15 +122,11 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Patient Weight (kg)</FormLabel>
                 <FormControl>
-                  <Input placeholder={(""+patientFromLocation.weight)} {...field} />
+                  <Input {...field} type="number" />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's weight.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is the patient's weight.</FormDescription>
+                <FormMessage>{form.formState.errors.weight?.message}</FormMessage>
               </FormItem>
-              
             )}
           />
           <FormField
@@ -163,15 +136,11 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Has the patient had breast cancer previously?</FormLabel>
                 <FormControl>
-                  <Input placeholder={(patientFromLocation.history)} {...field} />
+                  <Input {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is if the patient has had breast cancer before.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is if the patient has had breast cancer before.</FormDescription>
+                <FormMessage>{form.formState.errors.history?.message}</FormMessage>
               </FormItem>
-              
             )}
           />
           <FormField
@@ -181,21 +150,17 @@ export function PatientDetails() {
               <FormItem>
                 <FormLabel>Scan ID</FormLabel>
                 <FormControl>
-                  <Input disabled placeholder={(patientFromLocation.scan_id?patientFromLocation.scan_id : "N/A")} {...field} />
+                  <Input {...field} disabled />
                 </FormControl>
-                <FormDescription>
-                  This is the patient's Scan ID.
-                </FormDescription>
-                <FormMessage>{form.formState.errors.patient_name?.message}</FormMessage>
-                
+                <FormDescription>This is the patient's Scan ID.</FormDescription>
+                <FormMessage>{form.formState.errors.scan_id?.message}</FormMessage>
               </FormItem>
             )}
           />
-          {/* // submit */}
-          <Button type="submit" >Save</Button>
+          <Button onClick={() => navigate(`/patients/${patientFromLocation.patient_id}/scan/`, { state: { patientFromLocation } })}>View Scans</Button>
+          <Button type="submit">Save</Button>
         </form>
       </Form>
-      </>
-    );
-  };
-
+    </>
+  );
+}

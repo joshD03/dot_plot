@@ -42,6 +42,7 @@ import { PatientDetails } from "./PatientDetails";
 import { useEffect, useRef, useState } from "react";
 import { Link, Navigate, NavigateFunction, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./Login";
+import ScanView from "./ScanView";
 
 
 
@@ -109,8 +110,8 @@ const Dashboard = () => {
                 <Home className="h-4 w-4" />
                 Manage Patients
               </Link>
-              <a
-                href="#"
+              <Link
+                to="/patients"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <ShoppingCart className="h-4 w-4" />
@@ -118,7 +119,7 @@ const Dashboard = () => {
                 {/* <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                   6
                 </Badge> */}
-              </a>
+              </Link>
             </nav>
           </div>
           <div className="mt-auto p-4">
@@ -236,6 +237,7 @@ const Dashboard = () => {
               <Route path ="/" element={<PatientCard data={patients}  />} />
               <Route path="/:patientId" element={<PatientDetails  />} />
               <Route path="*" element={<Navigate to="/patients" />} />
+              <Route path="/:patientId/scan/" element={<ScanView />}/>
           </Routes>
 
           
