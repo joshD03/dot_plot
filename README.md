@@ -6,23 +6,21 @@ Welcome to MediVisual, a full-stack web application designed for NHS staff to se
 
 ## Tech Stack
 
-Frontend:
+**Frontend:**
+- **Language**: JavaScript - Utilised to create dynamic and interactive elements on the frontend.
+- **Framework/Library**: React.js - Employed to build the responsive user interface for the patient management tool.
+- **Styling**: TailwindCSS - Used to style the frontend, ensuring a modern and consistent design.
 
-Language: JavaScript - Utilised to create dynamic and interactive elements on the frontend.
-Framework/Library: React.js - Employed to build the responsive user interface for the patient management tool.
-Styling: TailwindCSS - Used to style the frontend, ensuring a modern and consistent design.
+**Backend:**
+- **Language**: Python - Implemented to handle backend logic and server-side operations.
+- **Framework**: FastAPI - Used to develop a high-performance backend API for managing patient data.
+- **API Design**: REST API - Applied to design the API endpoints for seamless communication between frontend and backend.
+- **Database**: MongoDB - Utilised as the database to efficiently store patient details and breast scans.
 
-Backend:
-
-Language: Python - Implemented to handle backend logic and server-side operations.
-Framework: FastAPI - Used to develop a high-performance backend API for managing patient data.
-API Design: REST API - Applied to design the API endpoints for seamless communication between frontend and backend.
-Database: MongoDB - Utilised as the database to efficiently store patient details and breast scans.
-
-Other Tools:
-
-Version Control: Git, hosted on GitHub
-Design: Figma for high-fidelity prototypes
+**Other Tools:**
+- **Version Control**: Git, hosted on GitHub.
+- **Design**: Figma for high-fidelity prototypes.
+- **Code Editor**: Visual Studio Code (VSCode) for writing and editing code.
 
 ## Screenshots
 
