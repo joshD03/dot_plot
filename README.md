@@ -1,8 +1,10 @@
-# Patient Management & Visualisation Tool
+# MediVisual - Patient Management & Visualisation Tool
 
 ## Description
 
-A patient management tool to visualise scans & manage patient data. An entry for the Dot Plot x Tech Academia accelerator programme
+Welcome to MediVisual, a full-stack web application designed for NHS staff to securely store patient details, breast scans, and visualise breast lesions on a 2D model. This innovative tool, developed in collaboration with MedTech firm Dotplot, aims to assist in the early detection of breast cancer. MediVisual is also an entry in the DotPlot x Tech Academia accelerator programme.
+
+##Screenshots
 
 ## Table of Contents
 
