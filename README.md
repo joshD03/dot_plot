@@ -6,9 +6,15 @@ Welcome to MediVisual, a full-stack web application designed for NHS staff to se
 
 ## Screenshots
 
+**Login Page**
+
 ![Login Page](https://github.com/joshD03/dot_plot/blob/main/MediVisual1.png?raw=true)
 
+**Patient details - Used to read, update, and delete information**
+
 ![Patient details - Used to read, update, and delete information](https://github.com/joshD03/dot_plot/blob/main/MediVisual2.png?raw=true)
+
+**Visualisation of breast lesions onto 2D model**
 
 ![Visulisation of breast lesions onto 2D model](https://github.com/joshD03/dot_plot/blob/main/MediVisual3.png?raw=true)
 
