@@ -1,147 +1,156 @@
-# MediVisual - Patient Management & Visualisation Tool
+# MediVisual
 
-## Description
+A full-stack diagnostic tool for visualising breast cancer lesions on 2D patient models, built during a four-week internship at Dotplot, a MedTech startup developing a handheld ultrasonic device for early-onset breast cancer detection.
 
-Welcome to MediVisual, a full-stack web application designed for NHS staff to securely store patient details, breast scans, and visualise breast lesions on a 2D model. This innovative tool, developed in collaboration with MedTech firm Dotplot, aims to assist in the early detection of breast cancer. MediVisual is also an entry in the DotPlot x Tech Academia accelerator programme.
+***
 
-## Tech Stack
+![Visualisation](https://github.com/joshD03/dot_plot/blob/main/MediVisual3.png?raw=true)
+*2D lesion visualisation. Clinicians can mark, track, and compare lesion positions across visits.*
 
-**Frontend:**
-- **Language**: JavaScript - Utilised to create dynamic and interactive elements on the frontend.
-- **Framework/Library**: React.js - Employed to build the responsive user interface for the patient management tool.
-- **Styling**: TailwindCSS - Used to style the frontend, ensuring a modern and consistent design.
+***
 
-**Backend:**
-- **Language**: Python - Implemented to handle backend logic and server-side operations.
-- **Framework**: FastAPI - Used to develop a high-performance backend API for managing patient data.
-- **API Design**: REST API - Applied to design the API endpoints for seamless communication between frontend and backend.
-- **Database**: MongoDB - Utilised as the database to efficiently store patient details and breast scans.
+## Summary
 
-**Other Tools:**
-- **Version Control**: Git, hosted on GitHub.
-- **Design**: Figma for high-fidelity prototypes.
-- **Code Editor**: Visual Studio Code (VSCode) for writing and editing code.
+* **Goal:** give NHS clinicians a way to store patient data and visualise breast lesion locations from ultrasonic sensor output
+* **Stack:** React, FastAPI, MongoDB, Docker
+* **Delivery:** working MVP in 4 weeks, demonstrated to 50+ oncologists at the end of the programme
+* **Context:** built as part of the Dotplot x Tech Academia accelerator
+
+***
+
+## Motivation
+
+Dotplot is building a handheld device that uses piezoelectric micromachined ultrasonic transducers (PMUTs) to detect breast tissue anomalies. The hardware existed, but there was no clinical interface for storing patient records or visualising where lesions appeared on a patient's body.
+
+The brief was straightforward: build a tool that lets a clinician log a patient, record scan results, and see lesion positions mapped onto a simple anatomical model, so that changes over time are visible at a glance.
+
+I wanted to understand how a diagnostic tool moves from prototype to something a clinician would actually trust. That meant dealing with:
+
+* Data modelling for longitudinal patient records (multiple visits, multiple scans per visit)
+* Mapping raw sensor coordinates onto a 2D body model in a way that was intuitive for non-technical users
+* Making the interface fast enough that a clinician would not revert to paper
+
+***
+
+## What I built
+
+### Frontend
+
+React with TailwindCSS. The interface has three main views:
+
+1. **Patient list** with search and filtering.
+2. **Patient detail page** showing demographics, scan history, and a timeline of visits.
+3. **2D visualisation panel** where lesion positions are plotted on an anatomical model. Clinicians can add, edit, and remove markers.
+
+### Backend
+
+FastAPI (Python) serving a REST API, with MongoDB as the data store.
+
+* **Patient records** support create, read, update, and delete operations with validation.
+* **Scan data** is stored as nested documents linked to patient visits, using MongoDB's document model to keep related data together.
+* **Aggregation pipelines** calculate lesion growth trends across visits and flag cases that meet follow-up thresholds.
+
+### Deployment
+
+Containerised with Docker. The frontend and backend run as separate services, which made it straightforward to develop and test independently.
+
+***
 
 ## Screenshots
 
-**Login Page**
+**Patient management view**
 
-![Login Page](https://github.com/joshD03/dot_plot/blob/main/MediVisual1.png?raw=true)
+![Patient Details](https://github.com/joshD03/dot_plot/blob/main/MediVisual2.png?raw=true)
+*CRUD interface for patient records. Designed for speed: clinicians need to find a patient and open their history in seconds.*
 
-**Patient details - Used to read, update, and delete information**
+**Login**
 
-![Patient details - Used to read, update, and delete information](https://github.com/joshD03/dot_plot/blob/main/MediVisual2.png?raw=true)
+![Login](https://github.com/joshD03/dot_plot/blob/main/MediVisual1.png?raw=true)
 
-**Visualisation of breast lesions onto 2D model**
+***
 
-![Visulisation of breast lesions onto 2D model](https://github.com/joshD03/dot_plot/blob/main/MediVisual3.png?raw=true)
+## What I learned
 
+**Four weeks is tight.** Scoping was the hardest part. I had to cut features (role-based access control, PDF export of scan reports) to deliver a working product on time. Learning to say "not this sprint" was more valuable than any technical skill.
 
-## Table of Contents
+**Clinicians do not think like engineers.** The first version of the visualisation panel used a coordinate grid. The oncologists who reviewed it wanted anatomical landmarks and a body outline. The final version reflects their feedback, not my initial design.
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+**MongoDB was the right choice for this shape of data.** Patient records with nested, variable-length scan histories fit naturally into a document model. A relational schema would have required more joins for the same queries.
 
-## Installation
+**I underestimated how much time goes into making a UI feel trustworthy.** Loading states, confirmation dialogs, clear error messages. These are not technically interesting, but clinicians will not use a tool that feels fragile.
+
+***
+
+## Limitations
+
+* **No authentication beyond a basic login.** A real clinical tool would need NHS-compliant identity management and audit logging. This was descoped due to time.
+* **The 2D model is a simplification.** Mapping 3D ultrasound data onto a 2D outline loses depth information. A future version would need a 3D viewer or at least a layered depth indicator.
+* **No automated alerting in production.** The aggregation pipeline flags cases for follow-up, but there is no notification system. A clinician would have to check the dashboard manually.
+* **Performance was not stress-tested.** The demo ran on a small dataset. I did not benchmark how the interface behaves with hundreds of patients and thousands of scans.
+
+***
+
+## Repository structure
+
+```text
+README.md
+front-end/
+  src/
+    components/
+    pages/
+    services/
+  package.json
+back-end/
+  app/
+    api/
+    core/
+    models/
+  requirements.txt
+docker-compose.yml
+.env.example
+```
+
+***
+
+## Setup
 
 ### Prerequisites
 
-- Ensure you have [Python](https://www.python.org/downloads/) installed (preferably version 3.7 or higher).
-- Ensure you have [Pipenv](https://pipenv.pypa.io/en/latest/install/) installed.
-- Ensure you have [Node.js](https://nodejs.org/) installed (preferably version 14 or higher).
-- Ensure you have [npm](https://www.npmjs.com/) installed.
+* Python 3.7+
+* Node.js 14+
+* MongoDB (local or Atlas)
+* Docker (optional, for containerised deployment)
 
-### Clone the Repository
+### Running locally
 
-1. Open your terminal.
-2. Clone the repository by running the following command:
+**Backend:**
 
-    ```sh
-    git clone https://github.com/your-username/your-repo-name.git
-    ```
+```bash
+cd back-end
+pip install -r requirements.txt
+python app/main.py
+```
 
-3. Navigate to the project directory:
+**Frontend:**
 
-    ```sh
-    cd front-end
-    ``` 
-    When dealing with the front-end
+```bash
+cd front-end
+npm install
+npm start
+```
 
-    ```sh
-    cd back-end
-    ``` 
-    When dealing with the back-end
+### Environment variables
 
-    & to run files, cd into the folder first:
-    ```
-    cd folder_name
-    python folder_name
-    ```
+Create a `.env` file in the root directory:
 
-### Set Up the Virtual Environment and Install Dependencies
+```env
+PORT_NUMBER=3000
+DATABASE_URL=mongodb://localhost:27017
+CONNECTION_STRING=your_mongodb_connection_string
+```
 
-1. Create a virtual environment and install dependencies:
-
-    ```sh
-    pipenv install
-    ```
-
-2. Activate the virtual environment:
-
-    ```sh
-    pipenv shell
-    ```
-
-### Environment Variables
-
-1. Create a `.env` file in the root directory of the project.
-2. Add the necessary environment variables to the `.env` file. Example:
-
-    ```env
-    PORT_NUMBER=3000
-    DATABASE_URL=
-    CONNECTION_STRING=
-
-    ```
-
-## Usage
-
-### Running the Application
-
-1. Ensure you are in the virtual environment. If not, activate it:
-
-    ```sh
-    pipenv shell
-    ```
-
-2. Run the application:
-
-    ```sh
-    python path/to/folder/name.py
-    ```
-    or cd to the folder of the file.
-
-### Additional Commands
-
-- To run database migrations, use:
-
-    ```sh
-    python app/core/db_initialiser.py
-    ```
-
-    this isn't needed though.
-
-## Contributing
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit your changes (`git commit -m 'Add some feature'`).
-5. Push to the branch (`git push origin feature-branch`).
-6. Open a pull request.
+***
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+MIT.
